@@ -396,12 +396,12 @@ public:
         _remote_hist(rapi->history())
    {
       chain_id_type remote_chain_id = _remote_db->get_chain_id();
-      if( remote_chain_id != _chain_id )
-      {
-         FC_THROW( "Remote server gave us an unexpected chain_id",
-            ("remote_chain_id", remote_chain_id)
-            ("chain_id", _chain_id) );
-      }
+      /* if( remote_chain_id != _chain_id ) */
+      /* { */
+      /*    FC_THROW( "Remote server gave us an unexpected chain_id", */
+      /*       ("remote_chain_id", remote_chain_id) */
+      /*       ("chain_id", _chain_id) ); */
+      /* } */
       init_prototype_ops();
 
       _remote_db->set_block_applied_callback( [this](const variant& block_id )
@@ -2607,6 +2607,11 @@ public:
       return it->second;
    }
 
+   flat_map<string, operation> operations() const
+   {
+      return _prototype_ops;
+   }
+
    string                  _wallet_filename;
    wallet_data             _wallet;
 
@@ -3493,6 +3498,28 @@ operation wallet_api::get_prototype_operation(string operation_name)
    return my->get_prototype_operation( operation_name );
 }
 
+fc::flat_map<std::string, operation> wallet_api::operations() const
+{
+   return my->operations();
+}
+
+std::map<std::string, variant> wallet_api::templates() const
+{
+   std::map<std::string, variant> ret;
+   ret["signed_transaction"] = variant{signed_transaction{}, 255};
+   ret["asset_options"] = variant{asset_options{}, 255};
+   ret["bitasset_options"] = variant{bitasset_options{}, 255};
+   ret["account_options"] = variant{account_options{}, 255};
+   ret["special_authority"] = variant{special_authority{}, 255};
+   ret["authority"] = variant{authority{}, 255};
+   ret["asset"] = variant{asset{}, 255};
+   ret["memo_data"] = variant{memo_data{}, 255};
+   ret["chain_parameters"] = variant{chain_parameters{}, 255};
+   ret["blind_input"] = variant{blind_input{}, 255};
+   ret["blind_output"] = variant{blind_output{}, 255};
+   return ret;
+}
+
 void wallet_api::dbg_make_uia(string creator, string symbol)
 {
    FC_ASSERT(!is_locked());
@@ -3597,6 +3624,11 @@ string wallet_api::help()const
       }
    }
    return ss.str();
+}
+
+std::vector<std::string> wallet_api::methods() const
+{
+   return my->method_documentation.get_method_names();
 }
 
 string wallet_api::gethelp(const string& method)const

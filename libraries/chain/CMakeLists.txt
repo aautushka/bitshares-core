@@ -96,6 +96,8 @@ add_library( graphene_chain
              "${CMAKE_CURRENT_BINARY_DIR}/include/graphene/chain/hardfork.hpp"
            )
 
+set_property(TARGET graphene_chain PROPERTY POSITION_INDEPENDENT_CODE ON)
+
 add_dependencies( graphene_chain build_hardfork_hpp )
 target_link_libraries( graphene_chain fc graphene_db )
 target_include_directories( graphene_chain

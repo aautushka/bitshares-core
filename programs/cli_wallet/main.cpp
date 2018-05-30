@@ -42,6 +42,7 @@
 #include <graphene/egenesis/egenesis.hpp>
 #include <graphene/utilities/key_conversion.hpp>
 #include <graphene/wallet/wallet.hpp>
+#include <graphene/wallet/appwallet.hpp>
 
 #include <fc/interprocess/signals.hpp>
 #include <boost/program_options.hpp>
@@ -72,7 +73,6 @@ namespace bpo = boost::program_options;
 int main( int argc, char** argv )
 {
    try {
-
       boost::program_options::options_description opts;
          opts.add_options()
          ("help,h", "Print this help message and exit.")

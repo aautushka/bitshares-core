@@ -590,7 +590,10 @@ class wallet_api
        *
        * @returns a multi-line string suitable for displaying on a terminal
        */
-      string  help()const;
+      string  help() const;
+      std::vector<std::string>  methods() const;
+      fc::flat_map<std::string, operation> operations() const;
+      std::map<std::string, variant> templates() const;
 
       /** Returns detailed help on a single API command.
        * @param method the name of the API command you want help with
@@ -1624,6 +1627,9 @@ FC_REFLECT( graphene::wallet::account_history_operation_detail,
 
 FC_API( graphene::wallet::wallet_api,
         (help)
+        (methods)
+        (operations)
+        (templates)
         (gethelp)
         (info)
         (about)
