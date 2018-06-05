@@ -68,52 +68,6 @@ function export_templates()
     exports.templates = deepFreeze(templates);
 }
 
-exports.abi = function (abi)
-{
-    abi['at'] = function(account, contract_id)
-    {
-        let contract = {signatures:[]};
-        for (let i = 0; i < abi.length; i++)
-        {
-            let name = abi[i].name;
-            let signature = name + "(";
-            if ("inputs" in abi[i])
-            {
-                let inputs = abi[i].inputs;
-                let arg_count = inputs.length;
-                for (let j = 0; j < arg_count; ++j)
-                {
-                    let arg = inputs[j];
-
-                    signature += arg.type;
-                    if (j < arg_count - 1)
-                    {
-                        signature += ",";
-                    }
-                }
-            }
-
-            signature += ')';
-            contract.signatures.push(signature);
-
-            contract[name] = () => exports.call("call_contract", contract_id, account, [signature]);
-        }
-
-        return contract;
-    }
-
-    return abi;
-}
-
-exports.abi_from_file = function (path)
-{
-    let fs = require('fs');
-    let contents = fs.readFileSync(path, 'utf8');
-    let abi = JSON.parse(contents);
-    return exports.abi(JSON.parse(contents));
-
-}
-
 exports.attach = function (addr)
 {
     addon.attach(addr);
